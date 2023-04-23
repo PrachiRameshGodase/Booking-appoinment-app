@@ -100,3 +100,17 @@ function showOnUserScreen(myObj){
     
 
 }
+//Deleting the Appointments
+window.addEventListener("DOMContentLoaded",()=>{
+    axios.delete("https://crudcrud.com/api/1a59ba4e4df040148d6703be66892e97/appData/6444a95c6246ac03e85355b5")
+    .then((response)=>{
+        console.log(response);
+        
+        for(var i=0;i<response.data.length;i++){
+            showOnUserScreen(response.data[i]);
+        }
+    })
+    .catch((error)=>{
+        console.log(error);
+    })
+})
