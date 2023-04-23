@@ -35,11 +35,22 @@ function onsubmit(e){
             document.body.innerHTML=document.body.innerHTML+"<h1>Something<h2>"
             console.log(error)
         })
-        // axios("https://crudcrud.com/api/09db2fdd700a445faebb77ff39ec6dec/appoinmentData")
-        // .then((response)=>{
-        //     showOnUserScreen(response)
-        // })
 }
+// data read from crud
+window.addEventListener("DOMContentLoaded",()=>{
+    axios.get("https://crudcrud.com/api/1a59ba4e4df040148d6703be66892e97/appData")
+    .then((response)=>{
+        console.log(response);
+        
+        for(var i=0;i<response.data.length;i++){
+            showOnUserScreen(response.data[i]);
+        }
+    })
+    .catch((error)=>{
+        console.log(error);
+    })
+})
+
 function showOnUserScreen(myObj){
 
 //create new element store data
@@ -68,7 +79,7 @@ function showOnUserScreen(myObj){
         ul.removeChild(li);
         
     }
-    //create edit btn
+    
     let editbtn=document.createElement("input");
     editbtn.type="button";
     editbtn.value="Edit";
