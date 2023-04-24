@@ -1,7 +1,5 @@
 
 let item=document.getElementById("item");
-
- 
 item.addEventListener('submit',onsubmit);
 // making function
 function onsubmit(e){
@@ -9,11 +7,6 @@ function onsubmit(e){
         let name=e.target.username.value;  
         let email=e.target.emailId.value;
         let phoneNumber=e.target.phoneNumber.value;
-//add in local storage
-        // localStorage.setItem("name",name);
-        // localStorage.setItem("email",email);
-    
-
 //create new variable for creating string like stru
         let myObj={
             name,
@@ -25,92 +18,66 @@ function onsubmit(e){
         // showOnUserScreen(myObj);
 
         //online data
-        axios.post("https://crudcrud.com/api/1a59ba4e4df040148d6703be66892e97/appData",myObj)
+        axios.post("https://crudcrud.com/api/49311c9df0914813966244ac22080cfe/appInfo",myObj)
         .then((response)=>{
             
             showOnUserScreen(response.data)
             console.log(response)
         })
         .catch((error)=>{
-            document.body.innerHTML=document.body.innerHTML+"<h1>Something<h2>"
+            document.body.innerHTML=document.body.innerHTML+"<h1>Something wrong<h2>"
             console.log(error)
         })
 }
-// data read from crud
-window.addEventListener("DOMContentLoaded",()=>{
-    axios.get("https://crudcrud.com/api/1a59ba4e4df040148d6703be66892e97/appData")
-    .then((response)=>{
-        console.log(response);
-        
-        for(var i=0;i<response.data.length;i++){
-            showOnUserScreen(response.data[i]);
-        }
-    })
-    .catch((error)=>{
-        console.log(error);
-    })
-})
 
-function showOnUserScreen(myObj){
 
+async function showOnUserScreen(){
 //create new element store data
-        let ul=document.getElementById("users");
+    let ul=document.getElementById("users");
+    let innerHTML="";
+    const response=await axios.get("https://crudcrud.com/api/49311c9df0914813966244ac22080cfe/appInfo")
+    let appointments=response.data;
+    for(let i=0; i<appointments.length;i++){
+        const appointment=appointments[i];
         let li=document.createElement("li");
-        li.textContent=myObj.name + "-" + myObj.email + "-" + myObj.phoneNumber;
-        ul.appendChild(li);
         
-//create fields
-        // myObj.name="";
-        // myObj.email="";
-        // myObj.phoneNumber="";
+        
 
 //create delete btn
     let deletebtn=document.createElement("input");
     deletebtn.type="button";
     deletebtn.value="Delete";
-    
-//append in li
     li.appendChild(deletebtn); 
-//append li inside userList
     ul.appendChild(li);
-
-    deletebtn.onclick=(e)=>{
-        localStorage.removeItem(myObj.name);
+    deletebtn.onclick=async()=>{
+        await axios.delete(`https://crudcrud.com/api/49311c9df0914813966244ac22080cfe/appInfo/${appointment._id}`)
         ul.removeChild(li);
-        
     }
-    
+//create editbtn
     let editbtn=document.createElement("input");
     editbtn.type="button";
     editbtn.value="Edit";
-    // console.log(editbtn);
-    //append in li
-    li.appendChild(editbtn); 
-    //append li inside userList
-    ul.appendChild(li);
+    
+    
 
-    editbtn.onclick=(e)=>{
-       //populating the userdetails
-        document.getElementById("item1").value=myObj.name;
-        document.getElementById("item2").value=myObj.email;
-        document.getElementById("item3").value=myObj.phoneNumber;
-        localStorage.removeItem(myObj.name);
+    editbtn.onclick=async()=>{
+        await axios.delete(`https://crudcrud.com/api/49311c9df0914813966244ac22080cfe/appInfo/${appointment._id}`)
+        //populating the userdetails
+        document.getElementById("item1").value=appointment.name;
+        document.getElementById("item2").value=appointment.email;
+        document.getElementById("item3").value=appointment.phoneNumber;
+        
         ul.removeChild(li);
     }
+    li.textContent=appointment.name + "-" + appointment.email + "-" + appointment.phoneNumber;
+    li.appendChild(editbtn); 
+    li.appendChild(deletebtn); 
+    ul.appendChild(li);
     
 
 }
-//Deleting the Appointments
-window.addEventListener("DOMContentLoaded",()=>{
-    axios.delete("https://crudcrud.com/api/1a59ba4e4df040148d6703be66892e97/appData/6444a95c6246ac03e85355b5")
-    .then((response)=>{
-        console.log(response);
-        
-        for(var i=0;i<response.data.length;i++){
-            showOnUserScreen(response.data[i]);
-        }
-    })
-    .catch((error)=>{
-        console.log(error);
-    })
+
+}
+document.addEventListener("DOMContentLoaded",()=>{
+    showOnUserScreen();
 })
